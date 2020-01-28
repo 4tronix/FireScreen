@@ -209,10 +209,10 @@ namespace oled4
          * @param s text to show: eg: '4tronix'
          * @param color text color: eg: 1
          */
-        //% blockId="showString_Oled" block="%oled|show string at x %x|y %y|text %s|color %color"
+        //% blockId="showText_Oled" block="%oled|show text at x %x|y %y|text %s|color %color"
         //% weight=70
         //% parts=oled4
-        export function showString(x: number, y: number, s: string, color: number = 1)
+        export function showText(x: number, y: number, s: string, color: number = 1)
         {
             let col = 0;
             let p = 0;
@@ -223,18 +223,18 @@ namespace oled4
                 p = chGen[s.charCodeAt(n)]
                 for (let i = 0; i < 5; i++)
                 {
-                    col = 0
+                    col = 0;
                     for (let j = 0; j < 5; j++)
                     {
                         if (p & (1 << (5 * i + j)))
-                            col |= (1 << (j + 1))
+                            col |= (1 << (j + 1));
                     }
-                    ind = (x + n) * 5 * (_ZOOM + 1) + y * 128 + i * (_ZOOM + 1) + 1
+                    ind = (x + n) * 5 * (_ZOOM + 1) + y * 128 + i * (_ZOOM + 1) + 1;
                     if (color == 0)
-                        col = 255 - col
-                    this.oBuffer[ind] = col
+                        col = 255 - col;
+                    this.oBuffer[ind] = col;
                     if (_ZOOM)
-                        this.oBuffer[ind + 1] = col
+                        this.oBuffer[ind + 1] = col;
                 }
             }
             set_pos(x * 5, y)
@@ -253,10 +253,10 @@ namespace oled4
      * OLED initialize
      * @param addr is i2c addr, eg: 60
      */
-    //% blockId="oInit" block="init 02 OLED at addr %addr"
+    //% blockId="oInit" block="init 03 OLED at addr %addr"
     //% weight=100
     //% parts=oled4
-    export function newOled(addr: number, lines: number): Oled
+    export function newOled(addr: number): Oled
     {
         let oled = new Oled();
         oled._oBuffer = pins.createBuffer(1024);
