@@ -211,7 +211,7 @@ namespace oled4
          */
         //% blockId="showText_Oled" block="%oled|show text at x %x|y %y|text %s|color %color"
         //% weight=70
-        //% parts=oled4
+        //% parts="oled4"
         showText(x: number, y: number, s: string, color: number = 1)
         {
             let col = 0;
@@ -252,9 +252,10 @@ namespace oled4
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="oInit" block="init 04 OLED at addr %addr"
+    //% blockId="oInit" block="init 05 OLED at addr %addr"
     //% weight=100
-    //% parts=oled4
+    //% blockSetVariable=oled
+    //% parts="oled4"
     export function newOled(addr: number): Oled
     {
         let oled = new Oled();
