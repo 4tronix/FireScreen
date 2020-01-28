@@ -1,5 +1,9 @@
 ﻿/* Makecode Helper Functions for 4tronix OLED Addons */
 
+/**
+ * Custom blocks
+ */
+//% weight=50 color=#e7660b icon="\uf1da"
 namespace oled4
 {
     /* create the character generator */
@@ -200,12 +204,12 @@ namespace oled4
 
        /**
          * show text in OLED
-         * @param x is X alis, eg: 0
-         * @param y is Y alis, eg: 0
-         * @param s is the text will be show, eg: 'Hello!'
-         * @param color is string color, eg: 1
+         * @param x x value: eg: 0
+         * @param y y value: eg: 0
+         * @param s text to show: eg: '4tronix'
+         * @param color text color: eg: 1
          */
-        //% blockId="showString_Oled" block="show string at x %x|y %y|text %s|color %color"
+        //% blockId="showString_Oled" block="%oled|show string at x %x|y %y|text %s|color %color"
         //% weight=70
         //% parts=oled4
         export function showString(x: number, y: number, s: string, color: number = 1)
@@ -249,7 +253,7 @@ namespace oled4
      * OLED initialize
      * @param addr is i2c addr, eg: 60
      */
-    //% blockId="oInit" block="init 01 OLED at addr %addr"
+    //% blockId="oInit" block="init 02 OLED at addr %addr"
     //% weight=100
     //% parts=oled4
     export function newOled(addr: number, lines: number): Oled
