@@ -212,7 +212,7 @@ namespace oled4
         //% blockId="showText_Oled" block="%oled|show text at x %x|y %y|text %s|color %color"
         //% weight=70
         //% parts=oled4
-        export function showText(x: number, y: number, s: string, color: number = 1)
+        showText(x: number, y: number, s: string, color: number = 1)
         {
             let col = 0;
             let p = 0;
@@ -237,23 +237,22 @@ namespace oled4
                         this.oBuffer[ind + 1] = col;
                 }
             }
-            set_pos(x * 5, y)
-            let ind0 = x * 5 * (_ZOOM + 1) + y * 128
-            let buf = this._oBuffer.slice(ind0, ind + 1)
-            buf[0] = 0x40
-            pins.i2cWriteBuffer(this._address, buf)
+            set_pos(x * 5, y);
+            let ind0 = x * 5 * (_ZOOM + 1) + y * 128;
+            let buf = this._oBuffer.slice(ind0, ind + 1);
+            buf[0] = 0x40;
+            pins.i2cWriteBuffer(this._address, buf);
         }
 
 
 
     }
 
-    /* Create a new OLED */
     /**
-     * OLED initialize
-     * @param addr is i2c addr, eg: 60
+     * Create a new OLED
+     * @param addr is i2c address; eg: 60
      */
-    //% blockId="oInit" block="init 03 OLED at addr %addr"
+    //% blockId="oInit" block="init 04 OLED at addr %addr"
     //% weight=100
     //% parts=oled4
     export function newOled(addr: number): Oled
