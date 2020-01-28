@@ -53,13 +53,14 @@ namespace oled4
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="oInit" block="init 06 OLED at addr %addr"
+    //% blockId="oInit" block="init 07 OLED at addr %addr"
     //% weight=100
     //% blockSetVariable=oled
     //% parts="oled4"
-    export function newOled(addr: number): number
+    export function newOled(addr: number): Oled
     {
-        return 23;
+        let oled = new Oled();
+        return oled;
     }
 
 
