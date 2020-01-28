@@ -1,0 +1,16 @@
+{
+    "name": "4tronOled",
+    "version": "0.0.1",
+    "description": "4tronix OLED Helper Functions",
+    "license": "MIT",
+    "dependencies": {
+        "core": "*"
+    },
+    "files": [
+        "README.md",
+        "oled4.ts"
+    ],
+    "testFiles": [],
+    "yotta": {},
+    "public": true
+}
