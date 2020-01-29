@@ -216,6 +216,18 @@ namespace firescreen
         //% inlineInputMode=inline
         showText(x: number, y: number, s: string, color: number)
         {
+            let col = 0;
+            let p = 0;
+            let ind = 0;
+            let _ZOOM = 0;
+            for (let n = 0; n < s.length; n++)
+            {
+            }
+            this.set_pos(x * 5, y);
+            let ind0 = x * 5 * (_ZOOM + 1) + y * 128;
+            let buf = this._oBuffer.slice(ind0, ind + 1);
+            buf[0] = 0x40;
+            pins.i2cWriteBuffer(this._address, buf);
         }
 
     }
@@ -224,7 +236,7 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="create 15 OLED at address %addr"
+    //% blockId="newScreen" block="create 16 OLED at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
