@@ -239,7 +239,7 @@ namespace firescreen
                         this.oBuffer[ind + 1] = col;
                 }
             }
-            set_pos(x * 5, y);
+            this.set_pos(x * 5, y);
             let ind0 = x * 5 * (_ZOOM + 1) + y * 128;
             let buf = this._oBuffer.slice(ind0, ind + 1);
             buf[0] = 0x40;
@@ -252,7 +252,7 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="create 12 OLED at address %addr"
+    //% blockId="newScreen" block="create 13 OLED at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
