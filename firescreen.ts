@@ -145,7 +145,7 @@ namespace firescreen
         _address: number;
         _is128: boolean;
         _zoomed: boolean;
-        _invert: boolean;
+        _inverted: boolean;
         _oBuffer: Buffer;
         _cBuf2: Buffer;
         _cBuf3: Buffer;
@@ -196,9 +196,9 @@ namespace firescreen
 
         set_pos(col: number = 0, page: number = 0)
         {
-            let _ZOOM = 0;
+            let scaler = this._zoomed ? 2 : 1;
             this.cmd1(0xb0 | page)       // page number
-            let c = col * (_ZOOM + 1);   // no zoom for now
+            let c = col * scaler;
             this.cmd1(0x00 | (c % 16))   // lower start column address
             this.cmd1(0x10 | (c >> 4))   // upper start column address    
         }
@@ -219,7 +219,7 @@ namespace firescreen
             let col = 0;
             let p = 0;
             let ind = 0;
-            let _ZOOM = 0;
+            let scaler = this._zoomed ? 2 : 1;
             for (let n = 0; n < s.length; n++)
             {
                 p = chGen[s.charCodeAt(n)];
@@ -231,28 +231,51 @@ namespace firescreen
                         if (p & (1 << (5 * i + j)))
                             col |= (1 << (j + 1));
                     }
-                    ind = (x + n) * 5 * (_ZOOM + 1) + y * 128 + i * (_ZOOM + 1) + 1;
-                    if (color == 0)
+                    ind = ((x + n) * 5 * scaler) + (y * 128 + i * scaler) + 1;
+                    if (this._inverted)
                         col = 255 - col;
                     this._oBuffer[ind] = col;
-                    if (_ZOOM)
+                    if (this._zoomed)
                         this._oBuffer[ind + 1] = col;
                 }
             }
             this.set_pos(x * 5, y);
-            let ind0 = x * 5 * (_ZOOM + 1) + y * 128;
+            let ind0 = x * 5 * scaler + y * 128;
             let buf = this._oBuffer.slice(ind0, ind + 1);
             buf[0] = 0x40;
             pins.i2cWriteBuffer(this._address, buf);
         }
 
+        /**
+         * Select Zoomed display (double height characters)
+         * @param doZoom select zoom or standard height
+         */
+        //% blockId=setZoom block="zoomed $doZoom"
+        //% doZoom.shadow="toggleYesNo" doZoom.defl=true
+        setZoom(doZoom: boolean)
+        {
+            this._zoomed = doZoom;
+        }
+
+        /**
+         * Select reverse colour characters (applies on future writes)
+         * @param doNormal select normal or inverse
+         */
+        //% blockId=setInverse
+        //% block="White on Black $doNormal"
+        //% doNormal.shadow="toggleYesNo"
+        //% doNormal.defl=true
+        setInverse(doNormal: boolean)
+        {
+            this._inverted = ! doNormal;
+        }
     }
 
     /**
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="create 19 OLED at address %addr"
+    //% blockId="newScreen" block="create 20 OLED at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
@@ -265,8 +288,8 @@ namespace firescreen
         screen._cBuf4 = pins.createBuffer(4);
         screen._address = addr;
         screen._is128 = true;
-        screen._zoomed = false;
-        screen._invert = false;
+        screen._zoomed = true;
+        screen._inverted = false;
         screen.cmd1(0xAE);          // DISPLAYOFF
         screen.cmd1(0xA4);          // DISPLAYALLON_RESUME
         screen.cmd2(0xD5, 0xF0);    // SETDISPLAYCLOCKDIV
