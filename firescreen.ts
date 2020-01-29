@@ -220,20 +220,24 @@ namespace firescreen
             let p = 0;
             let ind = 0;
             let _ZOOM = 0;
-            for (let i = 0; i < s.length; i++)
+            for (let n = 0; n < s.length; n++)
             {
-                col = 0;
-                for (let j = 0; j < 5; j++)
+                p = chGen[s.charCodeAt(n)];
+                for (let i = 0; i < 5; i++)
                 {
-                    if (p & (1 << (5 * i + j)))
-                        col |= (1 << (j + 1));
+                    col = 0;
+                    for (let j = 0; j < 5; j++)
+                    {
+                        if (p & (1 << (5 * i + j)))
+                            col |= (1 << (j + 1));
+                    }
+                    ind = (x + n) * 5 * (_ZOOM + 1) + y * 128 + i * (_ZOOM + 1) + 1;
+                    if (color == 0)
+                        col = 255 - col;
+                    this._oBuffer[ind] = col;
+                    if (_ZOOM)
+                        this._oBuffer[ind + 1] = col;
                 }
-                ind = (x + n) * 5 * (_ZOOM + 1) + y * 128 + i * (_ZOOM + 1) + 1;
-                if (color == 0)
-                    col = 255 - col;
-                this.oBuffer[ind] = col;
-                if (_ZOOM)
-                    this.oBuffer[ind + 1] = col;
             }
             this.set_pos(x * 5, y);
             let ind0 = x * 5 * (_ZOOM + 1) + y * 128;
@@ -248,7 +252,7 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="create 18 OLED at address %addr"
+    //% blockId="newScreen" block="create 19 OLED at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
