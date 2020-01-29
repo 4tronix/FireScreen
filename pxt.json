@@ -8,7 +8,7 @@
     },
     "files": [
         "README.md",
-        "oled4.ts"
+        "firescreen.ts"
     ],
     "testFiles": [],
     "yotta": {},
