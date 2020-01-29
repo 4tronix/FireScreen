@@ -251,8 +251,8 @@ namespace firescreen
          * @param doZoom select zoom or standard height
          */
         //% blockId=setZoom block="zoomed $doZoom"
-        //% doZoom.shadow="toggleYesNo"
-        setZoom(doZoom: boolean)
+        //% doZoom.shadow="toggleYesNo" doZoom.defl=true
+        export function setZoom(doZoom: boolean)
         {
             this._zoomed = doZoom;
         }
@@ -265,7 +265,7 @@ namespace firescreen
         //% block="White on Black $doNormal"
         //% doNormal.shadow="toggleYesNo"
         //% doNormal.defl=true
-        setInverse(doNormal: boolean)
+        export function setInverse(doNormal: boolean)
         {
             this._inverted = ! doNormal;
         }
@@ -275,7 +275,7 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="create 21 OLED at address %addr"
+    //% blockId="newScreen" block="create 22 OLED at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
