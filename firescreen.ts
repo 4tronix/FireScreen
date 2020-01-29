@@ -159,7 +159,7 @@ namespace firescreen
         {
             this._oBuffer.fill(0);
             this._oBuffer[0] = 0x40;
-            this.updateOled();
+            this.updateScreen();
         }
 
         /* Update the OLED from the buffer */
@@ -252,7 +252,7 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="create 11 OLED at address %addr"
+    //% blockId="newScreen" block="create 12 OLED at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
@@ -286,7 +286,7 @@ namespace firescreen
         screen.cmd1(0xA6);          // NORMALDISPLAY
         screen.cmd2(0xD6, 1);       // ZOOM
         screen.cmd1(0xAF) ;         // DISPLAYON
-        screen.clearOled();
+        screen.clearScreen();
         return screen;
     }
 
