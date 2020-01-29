@@ -145,7 +145,7 @@ namespace firescreen
         _address: number;
         _is128: boolean;
         _zoomed: boolean;
-        _inverted: boolean;
+        _inverse: boolean;
         _oBuffer: Buffer;
         _cBuf2: Buffer;
         _cBuf3: Buffer;
@@ -232,7 +232,7 @@ namespace firescreen
                             col |= (1 << (j + 1));
                     }
                     ind = ((x + n) * 5 * scaler) + (y * 128 + i * scaler) + 1;
-                    if (this._inverted)
+                    if (this._inverse)
                         col = 255 - col;
                     this._oBuffer[ind] = col;
                     if (this._zoomed)
@@ -251,6 +251,7 @@ namespace firescreen
          * @param doZoom select zoom or standard height
          */
         //% blockId=setZoom block="%screen|zoomed %doZoom"
+        //% parts="firescreen"
         setZoom(doZoom: boolean)
         {
             this._zoomed = doZoom;
@@ -262,6 +263,7 @@ namespace firescreen
          */
         //% blockId=setInverse
         //% block="%screen|White on Black %doNormal"
+        //% parts="firescreen"
         setInverse(doNormal: boolean)
         {
             this._inverse = ! doNormal;
@@ -272,7 +274,7 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="create 24 OLED at address %addr"
+    //% blockId="newScreen" block="create 25 OLED at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
