@@ -250,7 +250,7 @@ namespace firescreen
          * Select Zoomed display (double height characters)
          * @param doZoom select zoom or standard height
          */
-        //% blockId=setZoom block="zoomed %doZoom"
+        //% blockId=setZoom block="%screen|zoomed %doZoom"
         setZoom(doZoom: boolean)
         {
             this._zoomed = doZoom;
@@ -261,7 +261,7 @@ namespace firescreen
          * @param doNormal select normal or inverse
          */
         //% blockId=setInverse
-        //% block="White on Black %doNormal"
+        //% block="%screen|White on Black %doNormal"
         setInverse(doNormal: boolean)
         {
             this._inverse = ! doNormal;
@@ -272,7 +272,7 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="create 23 OLED at address %addr"
+    //% blockId="newScreen" block="create 24 OLED at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
