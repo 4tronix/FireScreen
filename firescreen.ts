@@ -16,7 +16,7 @@ namespace firescreen
     {
 
         /* Clears the OLED */
-        //% blockId="clear_Oled" block="%oled|clear OLED" 
+        //% blockId="clear_Oled" block="%screen|clear OLED" 
         //% weight=90
         //% parts="firescreen"
         clearOled()
@@ -24,7 +24,7 @@ namespace firescreen
         }
 
         /* Update the OLED from the buffer */
-        //% blockId="update_Oled" block="%oled|update OLED" 
+        //% blockId="update_Oled" block="%screen|update OLED" 
         //% weight=80
         //% parts="firescreen"
         updateOled()
@@ -38,7 +38,7 @@ namespace firescreen
          * @param s text to show: eg: '4tronix'
          * @param color text color: eg: 1
          */
-        //% blockId="showText_Oled" block="%oled|show text at x %x|y %y|text %s|color %color"
+        //% blockId="showText_Oled" block="%screen|show text at x %x|y %y|text %s|color %color"
         //% weight=70
         //% parts="firescreen"
         showText(x: number, y: number, s: string, color: number = 1)
@@ -53,13 +53,13 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="oInit" block="init 08 OLED at addr %addr"
+    //% blockId="oInit" block="init 09 OLED at addr %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
     export function newOled(addr: number): Screen
     {
-        let screen = new Oled();
+        let screen = new Screen();
         return screen;
     }
 
