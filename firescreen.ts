@@ -507,7 +507,7 @@ namespace firescreen
 
         doChar(s: string, x: number, y: number)
         {
-/*            this.set_pos(x, y);
+            this.set_pos(x, y, false);
             this._cBuf2[0] = 0x40;
             for (let i = 0; i < 6; i++)
             {
@@ -520,7 +520,7 @@ namespace firescreen
                     cBuf2[1] = cNum;
                 }
                 pins.i2cWriteBuffer(this._address, this._cBuf2);
-            }*/
+            }
         }
 
        /**
@@ -620,7 +620,7 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="OLED 46 at address %addr"
+    //% blockId="newScreen" block="OLED 47 at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
