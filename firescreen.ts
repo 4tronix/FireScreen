@@ -516,8 +516,8 @@ namespace firescreen
                 else
                 {
                     let cIdx = s.charCodeAt(0);
-                    let cNum = font.getNumber(NumberFormat.UInt8BE, 5 * cIdx + i);
-                    cBuf2[1] = cNum;
+      //              let cNum = font.getNumber(NumberFormat.UInt8BE, 5 * cIdx + i);
+       //             cBuf2[1] = cNum;
                 }
                 pins.i2cWriteBuffer(this._address, this._cBuf2);
             }
@@ -620,7 +620,7 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="OLED 47 at address %addr"
+    //% blockId="newScreen" block="OLED 48 at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
