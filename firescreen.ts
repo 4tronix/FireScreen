@@ -73,7 +73,7 @@ namespace firescreen
     chGen[62] = 0x00022a20;
     chGen[63] = 0x0022d422;
     chGen[64] = 0x00e4d62e;
-    chGen[65] = 0x000f14be;
+    chGen[65] = 0x7C1211127C; // 'A'
     chGen[66] = 0x000556bf;
     chGen[67] = 0x0008c62e;
     chGen[68] = 0x0007463f;
@@ -273,7 +273,7 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="OLED 37 at address %addr"
+    //% blockId="newScreen" block="OLED 38 at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
