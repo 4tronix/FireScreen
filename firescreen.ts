@@ -204,23 +204,45 @@ namespace firescreen
         }
 
        /**
+         * show number on OLED
+         * @param x x value: eg: 0
+         * @param y y value: eg: 0
+         * @param n number to print: eg: 100
+         * @param inv inverse video: eg: false
+         * @param zoom zoomed text: eg: false
+         */
+        //% blockId="showNumber" block="%screen|number %n| at x %x|y %y|inverse %inv|zoom %zoom"
+        //% weight=70
+        //% parts="firescreen"
+        //% inlineInputMode=inline
+        //% blockGap=8
+        //% inv.shadow="toggleYesNo"
+        //% zoom.shadow="toggleYesNo"
+        showNumber(n: number, x: number, y: number, inv: boolean, zoom: boolean)
+        {
+            showText(x, y, convertToText(n), inv, zoom);
+        }
+
+       /**
          * show text on OLED
          * @param x x value: eg: 0
          * @param y y value: eg: 0
          * @param s text to show: eg: '4tronix'
          * @param color text color: eg: 1
          */
-        //% blockId="showText" block="%screen|show text at x %x|y %y|text %s|color %color"
+        //% blockId="showText" block="%screen|text %s|at x %x|y %y|inverse %inv|zoom %zoom"
         //% weight=70
         //% parts="firescreen"
         //% inlineInputMode=inline
         //% blockGap=8
-        showText(x: number, y: number, s: string, color: number)
+        //% inv.shadow="toggleYesNo"
+        //% zoom.shadow="toggleYesNo"
+        showText(s: string, x: number, y: number, inv: boolean, zoom: boolean)
         {
             let col = 0;
             let p = 0;
             let ind = 0;
-            let scaler = this._zoomed ? 2 : 1;
+            let scaler = zoom ? 2 : 1;
             for (let n = 0; n < s.length; n++)
             {
                 p = chGen[s.charCodeAt(n)];
@@ -233,10 +255,10 @@ namespace firescreen
                             col |= (1 << (j + 1));
                     }
                     ind = ((x + n) * 5 * scaler) + (y * 128 + i * scaler) + 1;
-                    if (this._inverse)
+                    if (inv)
                         col = 255 - col;
                     this._oBuffer[ind] = col;
-                    if (this._zoomed)
+                    if (zoom)
                         this._oBuffer[ind + 1] = col;
                 }
             }
@@ -281,7 +303,7 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="OLED 30 at address %addr"
+    //% blockId="newScreen" block="OLED 31 at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
