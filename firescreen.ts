@@ -219,7 +219,7 @@ namespace firescreen
         {
             let numString: string;
             numString = n.toString();
-            showText(numString, x, y, inv, zoom);
+            this.showText(numString, x, y, inv, zoom);
         }
 
        /**
@@ -273,7 +273,7 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="OLED 36 at address %addr"
+    //% blockId="newScreen" block="OLED 37 at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
