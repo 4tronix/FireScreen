@@ -217,7 +217,9 @@ namespace firescreen
         //% zoom.shadow="toggleYesNo"
         showNumber(n: number, x: number, y: number, inv: boolean, zoom: boolean)
         {
-            showText(n.toString(), x, y, inv, zoom);
+            let numString: string;
+            numString = n.toString();
+            showText(numString, x, y, inv, zoom);
         }
 
        /**
@@ -271,7 +273,7 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="OLED 35 at address %addr"
+    //% blockId="newScreen" block="OLED 36 at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
