@@ -137,7 +137,8 @@ namespace firescreen
     chGen[126] = 0x00841080;
     chGen[127] = 0x0022d422;
 
-    let font: Buffer = hex`
+    let font: Buffer
+    font = hex`
     0000000000
     3E5B4F5B3E
     3E6B4F6B3E
@@ -392,7 +393,7 @@ namespace firescreen
     001F01011E
     00191D1712
     003C3C3C3C
-    0000000000`
+    0000000000`;
 
     /* A single Oled */
     export class Screen
@@ -591,7 +592,7 @@ namespace firescreen
         //% zoom.shadow="toggleYesNo"
         setOledPixel(x: number, y: number, inv: boolean, zoom: boolean)
         {
-            let page = y >> 3;
+/*            let page = y >> 3;
             let shift_page = y % 8;
             let scaler = zoom ? 2 : 1;
             let ind = x * scaler + page * 128 + 1;
@@ -610,7 +611,7 @@ namespace firescreen
                 this._cBuf2[0] = 0x40;
                 this._cBuf2[1] = b;
                 pins.i2cWriteBuffer(this._address, this._cBuf2);
-            }
+            }*/
         }
 
    }
@@ -619,7 +620,7 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="OLED 43 at address %addr"
+    //% blockId="newScreen" block="OLED 44 at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
