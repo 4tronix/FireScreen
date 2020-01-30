@@ -175,6 +175,12 @@ namespace firescreen
             pins.i2cWriteNumber(this._address, n1 & 0xff, NumberFormat.UInt16BE);
         }
 
+        cmd1a(n1: number)
+        {
+            this._cBuf2[1] = n1;
+            pins.i2cWriteBuffer(this._address, this._cBuf2);
+        }
+
         cmd2(n1: number, n2: number)
         {
             this._cBuf3[0] = 0;
@@ -203,14 +209,14 @@ namespace firescreen
 
        /**
          * show number on OLED
+         * @param n number to print: eg: 100
          * @param x x value: eg: 0
          * @param y y value: eg: 0
-         * @param n number to print: eg: 100
          * @param inv inverse video: eg: false
          * @param zoom zoomed text: eg: false
          */
         //% blockId="showNumber" block="%screen|number %n| at x %x|y %y|inverse %inv|zoom %zoom"
-        //% weight=70
+        //% weight=60
         //% parts="firescreen"
         //% inlineInputMode=inline
         //% inv.shadow="toggleYesNo"
@@ -222,10 +228,52 @@ namespace firescreen
 
        /**
          * show text on OLED
+         * @param s string to print: eg: 'ABCDE'
          * @param x x value: eg: 0
          * @param y y value: eg: 0
+         */
+        //% blockId="doText"
+        //% block="%screen|text %s|at x%x|y%y"
+        //% weight=65
+        doText(s: string, x: number, y:number)
+        {
+            for (let n = 0; n < s.length; n++)
+            {
+                if (x > displayWidth - 6)
+                {
+                    
+                }
+                this.doChar(s.charAt(n), x, y)
+                x += 6;
+            }
+        }
+
+        doChar(s: string, x: number, y: number)
+        {
+            this.set_pos(x, y);
+            this._cBuf2[0] = 0x40;
+            for (let i = 0; i < 6; i++)
+            {
+                if (i === 5)
+                    this._cBuf2[1] = 0;
+                else
+                {
+                    let cIdx = s.charCodeAt(0);
+                    let cNum = chGen.getNumber(NumberFormat.UInt8BE, 5 * cIdx + i);
+                    cBuf2[1] = cNum;
+                }
+                pins.i2cWriteBuffer(this._address, this._cBuf2);
+            }
+        }
+
+
+       /**
+         * show text on OLED
          * @param s text to show: eg: '4tronix'
-         * @param color text color: eg: 1
+         * @param x x value: eg: 0
+         * @param y y value: eg: 0
+         * @param inv inverse video: eg: false
+         * @param zoom zoomed text: eg: false
          */
         //% blockId="showText" block="%screen|text %s|at x %x|y %y|inverse %inv|zoom %zoom"
         //% weight=70
@@ -271,7 +319,7 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="OLED 40 at address %addr"
+    //% blockId="newScreen" block="OLED 41 at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
