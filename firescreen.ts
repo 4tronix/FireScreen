@@ -255,6 +255,7 @@ namespace firescreen
         //% doZoom.shadow="toggleYesNo"
         //% doZoom.defl=true
         //% parts="firescreen"
+        //% blockGap=14
         setZoom(doZoom: boolean)
         {
             this._zoomed = doZoom;
@@ -279,10 +280,11 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="create 28 OLED at address %addr"
+    //% blockId="newScreen" block="OLED 29 at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
+    //% blockGap=14
     export function newScreen(addr: number): Screen
     {
         let screen = new Screen();
