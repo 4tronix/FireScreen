@@ -197,8 +197,8 @@ namespace firescreen
             let scaler = zoom ? 2 : 1;
             this.cmd1(0xb0 | page)       // page number
             let c = col * scaler;
-            this.cmd1(0x00 | (c % 16))   // lower start column address
-            this.cmd1(0x10 | (c >> 4))   // upper start column address    
+            this.cmd1(0x00 | (c % 16));  // lower start column address
+            this.cmd1(0x10 | (c >> 4));  // upper start column address    
         }
 
        /**
@@ -217,7 +217,7 @@ namespace firescreen
         //% zoom.shadow="toggleYesNo"
         showNumber(n: number, x: number, y: number, inv: boolean, zoom: boolean)
         {
-            //showText(convertToText(n), x, y, inv, zoom);
+            showText(n.convertToText(), x, y, inv, zoom);
         }
 
        /**
@@ -271,7 +271,7 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="OLED 33 at address %addr"
+    //% blockId="newScreen" block="OLED 34 at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
