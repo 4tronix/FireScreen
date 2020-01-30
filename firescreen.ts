@@ -266,6 +266,7 @@ namespace firescreen
          */
         //% blockId=setInverse
         //% block="%screen|Inverse video %doInverse"
+        //% doInverse.shadow="toggleYesNo"
         //% parts="firescreen"
         //% doInverse.defl=false
         setInverse(doInverse: boolean)
@@ -278,7 +279,7 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="create 27 OLED at address %addr"
+    //% blockId="newScreen" block="create 28 OLED at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
