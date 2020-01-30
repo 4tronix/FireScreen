@@ -598,7 +598,7 @@ namespace firescreen
             let ind = x * scaler + page * 128 + 1;
             let b = inv ? (this._oBuffer[ind] | (1 << shift_page)) : this.clearBit(this._oBuffer[ind], shift_page);
             this._oBuffer[ind] = b;
-            this.set_pos(x, page);
+            this.set_pos(x, page, zoom);
             if (zoom)
             {
                 this._oBuffer[ind + 1] = b;
@@ -620,7 +620,7 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="OLED 45 at address %addr"
+    //% blockId="newScreen" block="OLED 46 at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
