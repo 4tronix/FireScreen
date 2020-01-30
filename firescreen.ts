@@ -213,12 +213,11 @@ namespace firescreen
         //% weight=70
         //% parts="firescreen"
         //% inlineInputMode=inline
-        //% blockGap=8
         //% inv.shadow="toggleYesNo"
         //% zoom.shadow="toggleYesNo"
         showNumber(n: number, x: number, y: number, inv: boolean, zoom: boolean)
         {
-            showText(convertToText(n), x, y, inv, zoom);
+            //showText(convertToText(n), x, y, inv, zoom);
         }
 
        /**
@@ -232,7 +231,6 @@ namespace firescreen
         //% weight=70
         //% parts="firescreen"
         //% inlineInputMode=inline
-        //% blockGap=8
         //% inv.shadow="toggleYesNo"
         //% zoom.shadow="toggleYesNo"
         showText(s: string, x: number, y: number, inv: boolean, zoom: boolean)
@@ -273,7 +271,7 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="OLED 32 at address %addr"
+    //% blockId="newScreen" block="OLED 33 at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
