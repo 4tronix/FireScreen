@@ -144,8 +144,6 @@ namespace firescreen
     {
         _address: number;
         _is128: boolean;
-        _zoomed: boolean;
-        _inverse: boolean;
         _oBuffer: Buffer;
         _cBuf2: Buffer;
         _cBuf3: Buffer;
@@ -168,7 +166,7 @@ namespace firescreen
         //% parts="firescreen"
         updateScreen()
         {
-            this.set_pos();
+            this.set_pos(0, 0, false);
             pins.i2cWriteBuffer(this._address, this._oBuffer);
         }
 
@@ -194,9 +192,9 @@ namespace firescreen
             pins.i2cWriteBuffer(this._address, this._cBuf4);
         }
 
-        set_pos(col: number = 0, page: number = 0)
+        set_pos(col: number, page: number, zoom: boolean)
         {
-            let scaler = this._zoomed ? 2 : 1;
+            let scaler = zoom ? 2 : 1;
             this.cmd1(0xb0 | page)       // page number
             let c = col * scaler;
             this.cmd1(0x00 | (c % 16))   // lower start column address
@@ -220,7 +218,7 @@ namespace firescreen
         //% zoom.shadow="toggleYesNo"
         showNumber(n: number, x: number, y: number, inv: boolean, zoom: boolean)
         {
-            showText(x, y, convertToText(n), inv, zoom);
+            showText(convertToText(n), x, y, inv, zoom);
         }
 
        /**
@@ -262,48 +260,20 @@ namespace firescreen
                         this._oBuffer[ind + 1] = col;
                 }
             }
-            this.set_pos(x * 5, y);
+            this.set_pos(x * 5, y, zoom);
             let ind0 = x * 5 * scaler + y * 128;
             let buf = this._oBuffer.slice(ind0, ind + 1);
             buf[0] = 0x40;
             pins.i2cWriteBuffer(this._address, buf);
         }
 
-        /**
-         * Select Zoomed display (double height characters)
-         * @param doZoom select zoom or standard height
-         */
-        //% blockId=setZoom
-        //% block="%screen|zoomed $doZoom"
-        //% doZoom.shadow="toggleYesNo"
-        //% doZoom.defl=true
-        //% parts="firescreen"
-        //% blockGap=14
-        setZoom(doZoom: boolean)
-        {
-            this._zoomed = doZoom;
-        }
-
-        /**
-         * Select inverse video characters (applies on future writes)
-         * @param doNormal select normal or inverse
-         */
-        //% blockId=setInverse
-        //% block="%screen|Inverse video %doInverse"
-        //% doInverse.shadow="toggleYesNo"
-        //% parts="firescreen"
-        //% doInverse.defl=false
-        setInverse(doInverse: boolean)
-        {
-            this._inverse = doInverse;
-        }
-    }
+   }
 
     /**
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="OLED 31 at address %addr"
+    //% blockId="newScreen" block="OLED 32 at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
@@ -317,8 +287,6 @@ namespace firescreen
         screen._cBuf4 = pins.createBuffer(4);
         screen._address = addr;
         screen._is128 = true;
-        screen._zoomed = true;
-        screen._inverse = false;
         screen.cmd1(0xAE);          // DISPLAYOFF
         screen.cmd1(0xA4);          // DISPLAYALLON_RESUME
         screen.cmd2(0xD5, 0xF0);    // SETDISPLAYCLOCKDIV
