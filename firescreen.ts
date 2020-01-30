@@ -214,6 +214,7 @@ namespace firescreen
         //% weight=70
         //% parts="firescreen"
         //% inlineInputMode=inline
+        //% blockGap=8
         showText(x: number, y: number, s: string, color: number)
         {
             let col = 0;
@@ -280,11 +281,11 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="OLED 29 at address %addr"
+    //% blockId="newScreen" block="OLED 30 at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
-    //% blockGap=14
+    //% blockGap=20
     export function newScreen(addr: number): Screen
     {
         let screen = new Screen();
