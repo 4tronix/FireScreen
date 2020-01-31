@@ -449,11 +449,11 @@ namespace firescreen
          * invert display
          * @param inv inverse video: eg: false
          */
-        //% blockId="invertOled" block="inverse video%inv"
+        //% blockId="%screen|invertOled" block="inverse video%inv"
         //% weight=65 blockGap=8
         //% inv.shadow="toggleYesNo"
         //% parts="firescreen"
-        invert(inv: boolean)
+        invertOled(inv: boolean)
         {
             let com = (inv) ? 0xA7 : 0xA6;
             this.cmd1(com);
@@ -466,7 +466,7 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="OLED 54 at address %addr"
+    //% blockId="newScreen" block="OLED 55 at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
