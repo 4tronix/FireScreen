@@ -446,9 +446,9 @@ namespace firescreen
         }
 
         /**
-         * invert display
-         * @param inv inverse video: eg: false
-         */
+          * Invert display
+          * @param inv inverse video: eg: false
+          */
         //% blockId="invertOled" block="%screen|inverse video%inv"
         //% weight=65
         //% inv.shadow="toggleYesNo"
@@ -461,7 +461,7 @@ namespace firescreen
 
         /**
         * zoom display
-        * @param  zoom zoomed text: eg: false
+        * @param zoom zoomed text: eg: false
         */
         //% blockId="zoomOled" block="%screen|zoom%zoom"
         //% weight=60
@@ -469,8 +469,8 @@ namespace firescreen
         //% zoom.shadow="toggleYesNo"
         zoomOled(zoom: boolean)
         {
-            let com = inv ? 1 : 0;
-            this.cmd2(0xd6, com)
+            let com = zoom ? 1 : 0;
+            this.cmd2(0xd6, com);
         }
     }
 
@@ -478,7 +478,7 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="OLED 58 at address %addr"
+    //% blockId="newScreen" block="OLED 59 at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
