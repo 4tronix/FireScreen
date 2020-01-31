@@ -474,14 +474,11 @@ namespace firescreen
         }
     }
 
-
-   }
-
     /**
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="OLED 57 at address %addr"
+    //% blockId="newScreen" block="OLED 58 at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
