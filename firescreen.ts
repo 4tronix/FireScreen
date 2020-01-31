@@ -387,7 +387,7 @@ namespace firescreen
             for (let i = 0; i < 6; i++)
             {
                 if (i === 5)
-                    this._cBuf2[1] = 0;
+                    this._cBuf2[1] = inv ? 255 : 0;
                 else
                 {
                     let cIdx = s.charCodeAt(0);
@@ -445,13 +445,28 @@ namespace firescreen
             }
         }
 
+        /**
+         * invert display
+         * @param inv inverse video: eg: false
+         */
+        //% blockId="invertOled" block="inverse video%inv"
+        //% weight=65 blockGap=8
+        //% inv.shadow="toggleYesNo"
+        //% parts="firescreen"
+        export function invert(inv: boolean)
+        {
+            let com = (inv) ? 0xA7 : 0xA6
+            this._cmd1(com)
+        }
+
+
    }
 
     /**
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="OLED 51 at address %addr"
+    //% blockId="newScreen" block="OLED 52 at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
