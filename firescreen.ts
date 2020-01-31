@@ -357,10 +357,15 @@ namespace firescreen
          * @param s string to print: eg: 'ABCDE'
          * @param x x value: eg: 0
          * @param y y value: eg: 0
+         * @param inv inverse video: eg: false
+         * @param zoom zoomed text: eg: false
          */
         //% blockId="doText"
         //% block="%screen|text%s|at x%x|y%y|inverse %inv|zoom %zoom"
         //% weight=65
+        //% inlineInputMode=inline
+        //% inv.shadow="toggleYesNo"
+        //% zoom.shadow="toggleYesNo"
         doText(s: string, x: number, y:number, inv: boolean, zoom: boolean)
         {
             for (let n = 0; n < s.length; n++)
@@ -370,7 +375,7 @@ namespace firescreen
                     y++;
                     x=0;
                 }
-                this.doChar(s.charAt(n), x, y, inv: boolean, zoom: boolean)
+                this.doChar(s.charAt(n), x, y, inv, zoom)
                 x += 6;
             }
         }
@@ -446,7 +451,7 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="OLED 50 at address %addr"
+    //% blockId="newScreen" block="OLED 51 at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
