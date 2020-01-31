@@ -413,7 +413,6 @@ namespace firescreen
          * @param x x value: eg: 0
          * @param y y value: eg: 0
          * @param inv inverse video: eg: false
-         * @param zoom zoomed text: eg: false
          */
         //% blockId="setOledPixel"
         //% block="%screen|set Oled pixel at x%x|y%y|inverse%inv|zoom%zoom"
@@ -472,13 +471,75 @@ namespace firescreen
             let com = zoom ? 1 : 0;
             this.cmd2(0xd6, com);
         }
+
+       /**
+         * draw a horizontal line
+         * @param x x start
+         * @param y y start
+         * @param len length of line, eg: 10
+         * @param inv inverse video: eg: false
+         */
+        //% blockId="oledHLine" block="%screen|horizontal line at x%x|y%y|length%length|inverse video%inv"
+        //% inv.shadow="toggleYesNo"
+        //% parts="firescreen"
+        //% inlineInputMode=inline
+        oledHLine(x: number, y: number, length: number, inv: boolean)
+        {
+            for (let i = x; i < (x + length); i++)
+                setOledPixel(i, y, inv, false);
+        }
+
+       /**
+         * draw a vertical line
+         * @param x x start
+         * @param y y start
+         * @param len length of line, eg: 10
+         * @param inv inverse video: eg: false
+         */
+        //% blockId="oledVLine" block="%screen|vertical line at x%x|y%y|length%length|inverse video%inv"
+        //% inv.shadow="toggleYesNo"
+        //% parts="firescreen"
+        //% inlineInputMode=inline
+        oledVLine(x: number, y: number, length: number, inv: boolean)
+        {
+            for (let i = y; i < (y + length); i++)
+                setOledPixel(x, i, inv, false);
+        }
+
+       /**
+         * draw a rectangle
+         * @param x1 x start
+         * @param y1 y start
+         * @param x2 x finish
+         * @param y2 y finish
+         * @param inv inverse video: eg: false
+         */
+        //% blockId="oledRect" block="%screen|rectangle at x1%x1|y1%y1|x2%x2|y2%y2|inverse video%inv"
+        //% inv.shadow="toggleYesNo"
+        //% parts="firescreen"
+        //% inlineInputMode=inline
+        oledRect(x1: number, y1: number, x2: number, y2: number, inv: boolean)
+        {
+            if (x1 > x2)
+                x1 = [x2, x2 = x1][0];
+            if (y1 > y2)
+                y1 = [y2, y2 = y1][0];
+            oledHLine(x1, y1, x2 - x1 + 1, inv);
+            oledHLine(x1, y2, x2 - x1 + 1, inv);
+            oledVLine(x1, y1, y2 - y1 + 1, inv);
+            oledVLine(x2, y1, y2 - y1 + 1, inv);
+        }
+
+
+
+
     }
 
     /**
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="OLED 59 at address %addr"
+    //% blockId="newScreen" block="OLED 60 at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
