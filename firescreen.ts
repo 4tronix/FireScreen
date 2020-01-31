@@ -453,10 +453,10 @@ namespace firescreen
         //% weight=65 blockGap=8
         //% inv.shadow="toggleYesNo"
         //% parts="firescreen"
-        export function invert(inv: boolean)
+        invert(inv: boolean)
         {
-            let com = (inv) ? 0xA7 : 0xA6
-            this._cmd1(com)
+            let com = (inv) ? 0xA7 : 0xA6;
+            this._cmd1(com);
         }
 
 
@@ -466,7 +466,7 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="OLED 52 at address %addr"
+    //% blockId="newScreen" block="OLED 53 at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
