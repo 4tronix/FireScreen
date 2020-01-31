@@ -486,7 +486,7 @@ namespace firescreen
         oledHLine(x: number, y: number, length: number, inv: boolean)
         {
             for (let i = x; i < (x + length); i++)
-                setOledPixel(i, y, inv, false);
+                this.setOledPixel(i, y, inv, false);
         }
 
        /**
@@ -503,7 +503,7 @@ namespace firescreen
         oledVLine(x: number, y: number, length: number, inv: boolean)
         {
             for (let i = y; i < (y + length); i++)
-                setOledPixel(x, i, inv, false);
+                this.setOledPixel(x, i, inv, false);
         }
 
        /**
@@ -524,10 +524,10 @@ namespace firescreen
                 x1 = [x2, x2 = x1][0];
             if (y1 > y2)
                 y1 = [y2, y2 = y1][0];
-            oledHLine(x1, y1, x2 - x1 + 1, inv);
-            oledHLine(x1, y2, x2 - x1 + 1, inv);
-            oledVLine(x1, y1, y2 - y1 + 1, inv);
-            oledVLine(x2, y1, y2 - y1 + 1, inv);
+            this.oledHLine(x1, y1, x2 - x1 + 1, inv);
+            this.oledHLine(x1, y2, x2 - x1 + 1, inv);
+            this.oledVLine(x1, y1, y2 - y1 + 1, inv);
+            this.oledVLine(x2, y1, y2 - y1 + 1, inv);
         }
 
 
@@ -539,7 +539,7 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="OLED 60 at address %addr"
+    //% blockId="newScreen" block="OLED 61 at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
