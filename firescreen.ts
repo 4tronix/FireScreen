@@ -359,7 +359,7 @@ namespace firescreen
          * @param inv inverse video: eg: false
          */
         //% blockId="doText"
-        //% block="%screen|text%s|at x%x|y%y|inverse %inv|zoom %zoom"
+        //% block="%screen|text%s|at x%x|y%y|inverse %inv"
         //% weight=65
         //% inlineInputMode=inline
         //% inv.shadow="toggleYesNo"
@@ -380,20 +380,22 @@ namespace firescreen
         doChar(s: string, x: number, y: number, inv: boolean)
         {
             this.set_pos(x, y);
-            this._cBuf2[0] = 0x40;
+            this._cBuf3[0] = 0x40;
             for (let i = 0; i < 6; i++)
             {
                 if (i === 5)
-                    this._cBuf2[1] = inv ? 255 : 0;
+                    this._cBuf3[1] = inv ? 255 : 0;
                 else
                 {
                     let cIdx = s.charCodeAt(0);
                     let cNum = font.getNumber(NumberFormat.UInt8BE, 5 * cIdx + i);
                     if (inv)
                         cNum = 255 - cNum;
-                    this._cBuf2[1] = cNum;
+                    this._cBuf3[1] = cNum;
                 }
-                pins.i2cWriteBuffer(this._address, this._cBuf2);
+                if (this._zoom)
+                    this._cBuf3[2] = cNum;
+                pins.i2cWriteBuffer(this._address, this._cBuf3);
             }
         }
 
@@ -455,7 +457,7 @@ namespace firescreen
 
         /**
         * zoom display
-        * @param zoom zoomed text: eg: false
+        * @param zoom zoomed text: eg: true
         */
         //% blockId="zoomOled" block="%screen|zoom%zoom"
         //% weight=60
@@ -529,7 +531,7 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="OLED 63 at address %addr"
+    //% blockId="newScreen" block="OLED 64 at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
