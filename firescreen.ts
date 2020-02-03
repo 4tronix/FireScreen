@@ -270,6 +270,7 @@ namespace firescreen
     {
         _address: number;
         _is128: boolean;
+        _zoom: boolean;
         _oBuffer: Buffer;
         _cBuf2: Buffer;
         _cBuf3: Buffer;
@@ -324,9 +325,9 @@ namespace firescreen
             pins.i2cWriteBuffer(this._address, this._cBuf4);
         }
 
-        set_pos(col: number, page: number, zoom: boolean)
+        set_pos(col: number, page: number)
         {
-            let scaler = zoom ? 2 : 1;
+            let scaler = this._zoom ? 2 : 1;
             this.cmd1(0xb0 | page)       // page number
             let c = col * scaler;
             this.cmd1(0x00 | (c % 16));  // lower start column address
@@ -339,17 +340,15 @@ namespace firescreen
          * @param x x value: eg: 0
          * @param y y value: eg: 0
          * @param inv inverse video: eg: false
-         * @param zoom zoomed text: eg: false
          */
-        //% blockId="showNumber" block="%screen|number %n| at x %x|y %y|inverse %inv|zoom %zoom"
+        //% blockId="showNumber" block="%screen|number %n| at x %x|y %y|inverse %inv"
         //% weight=60
         //% parts="firescreen"
         //% inlineInputMode=inline
         //% inv.shadow="toggleYesNo"
-        //% zoom.shadow="toggleYesNo"
-        showNumber(n: number, x: number, y: number, inv: boolean, zoom: boolean)
+        showNumber(n: number, x: number, y: number, inv: boolean)
         {
-            this.doText(n.toString(), x, y, inv, zoom);
+            this.doText(n.toString(), x, y, inv);
         }
 
        /**
@@ -358,15 +357,13 @@ namespace firescreen
          * @param x x value: eg: 0
          * @param y y value: eg: 0
          * @param inv inverse video: eg: false
-         * @param zoom zoomed text: eg: false
          */
         //% blockId="doText"
         //% block="%screen|text%s|at x%x|y%y|inverse %inv|zoom %zoom"
         //% weight=65
         //% inlineInputMode=inline
         //% inv.shadow="toggleYesNo"
-        //% zoom.shadow="toggleYesNo"
-        doText(s: string, x: number, y:number, inv: boolean, zoom: boolean)
+        doText(s: string, x: number, y:number, inv: boolean)
         {
             for (let n = 0; n < s.length; n++)
             {
@@ -375,12 +372,12 @@ namespace firescreen
                     y++;
                     x=0;
                 }
-                this.doChar(s.charAt(n), x, y, inv, zoom)
+                this.doChar(s.charAt(n), x, y, inv)
                 x += 6;
             }
         }
 
-        doChar(s: string, x: number, y: number, inv: boolean, zoom: boolean)
+        doChar(s: string, x: number, y: number, inv: boolean)
         {
             this.set_pos(x, y, false);
             this._cBuf2[0] = 0x40;
@@ -412,24 +409,22 @@ namespace firescreen
          * set pixel in OLED
          * @param x x value: eg: 0
          * @param y y value: eg: 0
-         * @param inv inverse video: eg: false
+         * @param doSet set or clear. eg: true
          */
         //% blockId="setOledPixel"
-        //% block="%screen|set Oled pixel at x%x|y%y|inverse%inv|zoom%zoom"
+        //% block="%screen|set Oled pixel at x%x|y%y|set%doSet"
         //% parts="firescreen"
         //% inlineInputMode=inline
-        //% inv.shadow="toggleYesNo"
-        //% zoom.shadow="toggleYesNo"
-        setOledPixel(x: number, y: number, inv: boolean, zoom: boolean)
+        setOledPixel(x: number, y: number, doSet: boolean)
         {
             let page = y >> 3;
             let shift_page = y % 8;
-            let scaler = zoom ? 2 : 1;
+            let scaler = this._zoom ? 2 : 1;
             let ind = x * scaler + page * 128 + 1;
-            let b = inv ? (this._oBuffer[ind] | (1 << shift_page)) : this.clearBit(this._oBuffer[ind], shift_page);
+            let b = doSet ? (this._oBuffer[ind] | (1 << shift_page)) : this.clearBit(this._oBuffer[ind], shift_page);
             this._oBuffer[ind] = b;
             this.set_pos(x, page, zoom);
-            if (zoom)
+            if (this._zoom)
             {
                 this._oBuffer[ind + 1] = b;
                 this._cBuf3[0] = 0x40;
@@ -477,16 +472,15 @@ namespace firescreen
          * @param x x start
          * @param y y start
          * @param len length of line, eg: 10
-         * @param inv inverse video: eg: false
+         * @param doSet set or clear. eg: true
          */
-        //% blockId="oledHLine" block="%screen|horizontal line at x%x|y%y|length%length|inverse video%inv"
-        //% inv.shadow="toggleYesNo"
+        //% blockId="oledHLine" block="%screen|horizontal line at x%x|y%y|length%length|set%doSet"
         //% parts="firescreen"
         //% inlineInputMode=inline
-        oledHLine(x: number, y: number, length: number, inv: boolean)
+        oledHLine(x: number, y: number, length: number, doSet: boolean)
         {
             for (let i = x; i < (x + length); i++)
-                this.setOledPixel(i, y, inv, false);
+                this.setOledPixel(i, y, doSet);
         }
 
        /**
@@ -494,16 +488,15 @@ namespace firescreen
          * @param x x start
          * @param y y start
          * @param len length of line, eg: 10
-         * @param inv inverse video: eg: false
+         * @param doSet set or clear. eg: true
          */
-        //% blockId="oledVLine" block="%screen|vertical line at x%x|y%y|length%length|inverse video%inv"
-        //% inv.shadow="toggleYesNo"
+        //% blockId="oledVLine" block="%screen|vertical line at x%x|y%y|length%length|set%doSet"
         //% parts="firescreen"
         //% inlineInputMode=inline
-        oledVLine(x: number, y: number, length: number, inv: boolean)
+        oledVLine(x: number, y: number, length: number, doSet: boolean)
         {
             for (let i = y; i < (y + length); i++)
-                this.setOledPixel(x, i, inv, false);
+                this.setOledPixel(x, i, doSet);
         }
 
        /**
@@ -512,26 +505,22 @@ namespace firescreen
          * @param y1 y start
          * @param x2 x finish
          * @param y2 y finish
-         * @param inv inverse video: eg: false
+         * @param doSet set or clear. eg: true
          */
-        //% blockId="oledRect" block="%screen|rectangle at x1%x1|y1%y1|x2%x2|y2%y2|inverse video%inv"
-        //% inv.shadow="toggleYesNo"
+        //% blockId="oledRect" block="%screen|rectangle at x1%x1|y1%y1|x2%x2|y2%y2|set%doSet"
         //% parts="firescreen"
         //% inlineInputMode=inline
-        oledRect(x1: number, y1: number, x2: number, y2: number, inv: boolean)
+        oledRect(x1: number, y1: number, x2: number, y2: number, doSet: boolean)
         {
             if (x1 > x2)
                 x1 = [x2, x2 = x1][0];
             if (y1 > y2)
                 y1 = [y2, y2 = y1][0];
-            this.oledHLine(x1, y1, x2 - x1 + 1, inv);
-            this.oledHLine(x1, y2, x2 - x1 + 1, inv);
-            this.oledVLine(x1, y1, y2 - y1 + 1, inv);
-            this.oledVLine(x2, y1, y2 - y1 + 1, inv);
+            this.oledHLine(x1, y1, x2 - x1 + 1, doSet);
+            this.oledHLine(x1, y2, x2 - x1 + 1, doSet);
+            this.oledVLine(x1, y1, y2 - y1 + 1, doSet);
+            this.oledVLine(x2, y1, y2 - y1 + 1, doSet);
         }
-
-
-
 
     }
 
@@ -539,7 +528,7 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="OLED 61 at address %addr"
+    //% blockId="newScreen" block="OLED 62 at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
@@ -553,6 +542,7 @@ namespace firescreen
         screen._cBuf4 = pins.createBuffer(4);
         screen._address = addr;
         screen._is128 = true;
+        screen._zoom = false;
         screen.cmd1(0xAE);          // DISPLAYOFF
         screen.cmd1(0xA4);          // DISPLAYALLON_RESUME
         screen.cmd2(0xD5, 0xF0);    // SETDISPLAYCLOCKDIV
@@ -570,7 +560,7 @@ namespace firescreen
         screen.cmd2(0xd9, 0xF1);    // SETPRECHARGE
         screen.cmd2(0xDB, 0x40);    // SETVCOMDETECT
         screen.cmd1(0xA6);          // NORMALDISPLAY
-        screen.cmd2(0xD6, 1);       // ZOOM
+        screen.cmd2(0xD6, 0);       // NOZOOM
         screen.cmd1(0xAF) ;         // DISPLAYON
         screen.clearScreen();
         return screen;
