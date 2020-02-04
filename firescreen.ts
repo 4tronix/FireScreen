@@ -382,10 +382,8 @@ namespace firescreen
             let cNum = 0;
             let cIdx = 0;
 
-            let page = y >> 3;
-            let scPage = y % 8;
             let scaler = this._zoom ? 2 : 1;
-            let scPos = x * scaler + page * 128 + 1;
+            let scPos = x * scaler + y * 128 + 1;
 
             this.set_pos(x, y);
             this._cBuf2[0] = 0x40;
@@ -403,13 +401,13 @@ namespace firescreen
                 }
                 if (this._zoom)
                 {
-                    this._oBuffer[scPos] = this._oBuffer[scPos+1] = cNum;
+                    this._oBuffer[scPos + i*2] = this._oBuffer[scPos + 1 + i*2] = cNum;
                     this._cBuf3[1] = this._cBuf3[2] = cNum;
                     pins.i2cWriteBuffer(this._address, this._cBuf3);
                 }
                 else
                 {
-                    this._oBuffer[scPos] = cNum;
+                    this._oBuffer[scPos + i] = cNum;
                     this._cBuf2[1] = cNum;
                     pins.i2cWriteBuffer(this._address, this._cBuf2);
                 }
@@ -552,7 +550,7 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="OLED 69 at address %addr"
+    //% blockId="newScreen" block="OLED 70 at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
