@@ -540,7 +540,7 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="OLED 66 at address %addr"
+    //% blockId="newScreen" block="OLED 67 at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
@@ -574,7 +574,7 @@ namespace firescreen
         screen.cmd1(0xA6);          // NORMALDISPLAY
         screen.cmd2(0xD6, 0);       // NOZOOM
         screen.cmd1(0xAF) ;         // DISPLAYON
-        screen.clearScreen(0);
+        screen.clearScreen(false);
         return screen;
     }
 
