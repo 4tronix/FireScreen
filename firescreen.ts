@@ -342,12 +342,12 @@ namespace firescreen
          * @param y y value: eg: 0
          * @param inv inverse video: eg: false
          */
-        //% blockId="showNumber" block="%screen|number %n| at x %x|y %y|inverse %inv"
+        //% blockId="doNumber" block="%screen|number %n| at x %x|y %y|inverse %inv"
         //% weight=60
         //% parts="firescreen"
         //% inlineInputMode=inline
         //% inv.shadow="toggleYesNo"
-        showNumber(n: number, x: number, y: number, inv: boolean)
+        doNumber(n: number, x: number, y: number, inv: boolean)
         {
             this.doText(n.toString(), x, y, inv);
         }
@@ -427,13 +427,14 @@ namespace firescreen
          * set pixel in OLED
          * @param x x value: eg: 0
          * @param y y value: eg: 0
-         * @param doSet set or clear. eg: true
+         * @param doSet on or off. eg: true
          */
-        //% blockId="setOledPixel"
+        //% blockId="plotPixel"
         //% block="%screen|set Oled pixel at x%x|y%y|set%doSet|update%update"
+        //% doSet.shadow="toggleOnOff"
         //% parts="firescreen"
         //% inlineInputMode=inline
-        setOledPixel(x: number, y: number, doSet: boolean, update: boolean)
+        plotPixel(x: number, y: number, doSet: boolean, update: boolean)
         {
             let page = y >> 3;
             let scPage = y % 8;
@@ -503,7 +504,7 @@ namespace firescreen
         oledHLine(x: number, y: number, length: number, doSet: boolean, update: boolean)
         {
             for (let i = x; i < (x + length); i++)
-                this.setOledPixel(i, y, doSet, update);
+                this.plotPixel(i, y, doSet, update);
         }
 
        /**
@@ -519,7 +520,7 @@ namespace firescreen
         oledVLine(x: number, y: number, length: number, doSet: boolean, update: boolean)
         {
             for (let i = y; i < (y + length); i++)
-                this.setOledPixel(x, i, doSet, update);
+                this.plotPixel(x, i, doSet, update);
         }
 
        /**
@@ -551,7 +552,7 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="OLED 71 at address %addr"
+    //% blockId="newScreen" block="OLED 72 at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
