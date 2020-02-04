@@ -381,6 +381,12 @@ namespace firescreen
         {
             let cNum = 0;
             let cIdx = 0;
+
+            let page = y >> 3;
+            let scPage = y % 8;
+            let scaler = this._zoom ? 2 : 1;
+            let scPos = x * scaler + page * 128 + 1;
+
             this.set_pos(x, y);
             this._cBuf2[0] = 0x40;
             this._cBuf3[0] = 0x40;
@@ -397,11 +403,13 @@ namespace firescreen
                 }
                 if (this._zoom)
                 {
+                    this._oBuffer[scPos] = this._oBuffer[scPos+1] = cNum;
                     this._cBuf3[1] = this._cBuf3[2] = cNum;
                     pins.i2cWriteBuffer(this._address, this._cBuf3);
                 }
                 else
                 {
+                    this._oBuffer[scPos] = cNum;
                     this._cBuf2[1] = cNum;
                     pins.i2cWriteBuffer(this._address, this._cBuf2);
                 }
@@ -429,25 +437,26 @@ namespace firescreen
         setOledPixel(x: number, y: number, doSet: boolean, update: boolean)
         {
             let page = y >> 3;
-            let shift_page = y % 8;
+            let scPage = y % 8;
             let scaler = this._zoom ? 2 : 1;
-            let ind = x * scaler + page * 128 + 1;
-            let b = doSet ? (this._oBuffer[ind] | (1 << shift_page)) : this.clearBit(this._oBuffer[ind], shift_page);
-            this._oBuffer[ind] = b;
+            let scPos = x * scaler + page * 128 + 1;
+            let byteVal = doSet ? (this._oBuffer[scPos] | (1 << scPage)) : this.clearBit(this._oBuffer[scPos], scPage);
+            this._oBuffer[scPos] = byteVal;
+            if (this._zoom)
+                this._oBuffer[scPos + 1] = byteVal;
             if (update)
             {
                 this.set_pos(x, page);
                 if (this._zoom)
                 {
-                    this._oBuffer[ind + 1] = b;
                     this._cBuf3[0] = 0x40;
-                    this._cBuf3[1] = this._cBuf3[2] = b;
+                    this._cBuf3[1] = this._cBuf3[2] = byteVal;
                     pins.i2cWriteBuffer(this._address, this._cBuf3);
                 }
                 else
                 {
                     this._cBuf2[0] = 0x40;
-                    this._cBuf2[1] = b;
+                    this._cBuf2[1] = byteVal;
                     pins.i2cWriteBuffer(this._address, this._cBuf2);
                 }
             }
@@ -543,7 +552,7 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="OLED 68 at address %addr"
+    //% blockId="newScreen" block="OLED 69 at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
