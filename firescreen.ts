@@ -423,10 +423,10 @@ namespace firescreen
          * @param doSet set or clear. eg: true
          */
         //% blockId="setOledPixel"
-        //% block="%screen|set Oled pixel at x%x|y%y|set%doSet"
+        //% block="%screen|set Oled pixel at x%x|y%y|set%doSet|update%update"
         //% parts="firescreen"
         //% inlineInputMode=inline
-        setOledPixel(x: number, y: number, doSet: boolean)
+        setOledPixel(x: number, y: number, doSet: boolean, update: boolean)
         {
             let page = y >> 3;
             let shift_page = y % 8;
@@ -434,19 +434,22 @@ namespace firescreen
             let ind = x * scaler + page * 128 + 1;
             let b = doSet ? (this._oBuffer[ind] | (1 << shift_page)) : this.clearBit(this._oBuffer[ind], shift_page);
             this._oBuffer[ind] = b;
-            this.set_pos(x, page);
-            if (this._zoom)
+            if (update)
             {
-                this._oBuffer[ind + 1] = b;
-                this._cBuf3[0] = 0x40;
-                this._cBuf3[1] = this._cBuf3[2] = b;
-                pins.i2cWriteBuffer(this._address, this._cBuf3);
-            }
-            else
-            {
-                this._cBuf2[0] = 0x40;
-                this._cBuf2[1] = b;
-                pins.i2cWriteBuffer(this._address, this._cBuf2);
+                this.set_pos(x, page);
+                if (this._zoom)
+                {
+                    this._oBuffer[ind + 1] = b;
+                    this._cBuf3[0] = 0x40;
+                    this._cBuf3[1] = this._cBuf3[2] = b;
+                    pins.i2cWriteBuffer(this._address, this._cBuf3);
+                }
+                else
+                {
+                    this._cBuf2[0] = 0x40;
+                    this._cBuf2[1] = b;
+                    pins.i2cWriteBuffer(this._address, this._cBuf2);
+                }
             }
         }
 
@@ -486,13 +489,13 @@ namespace firescreen
          * @param len length of line, eg: 10
          * @param doSet set or clear. eg: true
          */
-        //% blockId="oledHLine" block="%screen|horizontal line at x%x|y%y|length%length|set%doSet"
+        //% blockId="oledHLine" block="%screen|horizontal line at x%x|y%y|length%length|set%doSet|update%update"
         //% parts="firescreen"
         //% inlineInputMode=inline
-        oledHLine(x: number, y: number, length: number, doSet: boolean)
+        oledHLine(x: number, y: number, length: number, doSet: boolean, update: boolean)
         {
             for (let i = x; i < (x + length); i++)
-                this.setOledPixel(i, y, doSet);
+                this.setOledPixel(i, y, doSet, update);
         }
 
        /**
@@ -502,13 +505,13 @@ namespace firescreen
          * @param len length of line, eg: 10
          * @param doSet set or clear. eg: true
          */
-        //% blockId="oledVLine" block="%screen|vertical line at x%x|y%y|length%length|set%doSet"
+        //% blockId="oledVLine" block="%screen|vertical line at x%x|y%y|length%length|set%doSet|update%update"
         //% parts="firescreen"
         //% inlineInputMode=inline
-        oledVLine(x: number, y: number, length: number, doSet: boolean)
+        oledVLine(x: number, y: number, length: number, doSet: boolean, update: boolean)
         {
             for (let i = y; i < (y + length); i++)
-                this.setOledPixel(x, i, doSet);
+                this.setOledPixel(x, i, doSet, update);
         }
 
        /**
@@ -519,19 +522,19 @@ namespace firescreen
          * @param y2 y finish
          * @param doSet set or clear. eg: true
          */
-        //% blockId="oledRect" block="%screen|rectangle at x1%x1|y1%y1|x2%x2|y2%y2|set%doSet"
+        //% blockId="oledRect" block="%screen|rectangle at x1%x1|y1%y1|x2%x2|y2%y2|set%doSet|update%update"
         //% parts="firescreen"
         //% inlineInputMode=inline
-        oledRect(x1: number, y1: number, x2: number, y2: number, doSet: boolean)
+        oledRect(x1: number, y1: number, x2: number, y2: number, doSet: boolean, update: boolean)
         {
             if (x1 > x2)
                 x1 = [x2, x2 = x1][0];
             if (y1 > y2)
                 y1 = [y2, y2 = y1][0];
-            this.oledHLine(x1, y1, x2 - x1 + 1, doSet);
-            this.oledHLine(x1, y2, x2 - x1 + 1, doSet);
-            this.oledVLine(x1, y1, y2 - y1 + 1, doSet);
-            this.oledVLine(x2, y1, y2 - y1 + 1, doSet);
+            this.oledHLine(x1, y1, x2 - x1 + 1, doSet, update);
+            this.oledHLine(x1, y2, x2 - x1 + 1, doSet, update);
+            this.oledVLine(x1, y1, y2 - y1 + 1, doSet, update);
+            this.oledVLine(x2, y1, y2 - y1 + 1, doSet, update);
         }
 
     }
@@ -540,7 +543,7 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="OLED 67 at address %addr"
+    //% blockId="newScreen" block="OLED 68 at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
@@ -548,7 +551,7 @@ namespace firescreen
     export function newScreen(addr: number): Screen
     {
         let screen = new Screen();
-        screen._oBuffer = pins.createBuffer(1024);
+        screen._oBuffer = pins.createBuffer(1025);
         screen._cBuf2 = pins.createBuffer(2);
         screen._cBuf3 = pins.createBuffer(3);
         screen._cBuf4 = pins.createBuffer(4);
