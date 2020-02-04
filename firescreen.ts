@@ -277,12 +277,12 @@ namespace firescreen
         _cBuf4: Buffer;
 
         /* Clears the OLED */
-        //% blockId="clearScreen" block="%screen|clear OLED" 
+        //% blockId="clearScreen" block="%screen|clear OLED%set" 
         //% weight=90
         //% parts="firescreen"
-        clearScreen()
+        clearScreen(set: boolean)
         {
-            this._oBuffer.fill(0);
+            this._oBuffer.fill(set ? 0xff : 0);
             this._oBuffer[0] = 0x40;
             this.updateScreen();
         }
@@ -540,7 +540,7 @@ namespace firescreen
      * Create a new OLED
      * @param addr is i2c address; eg: 60
      */
-    //% blockId="newScreen" block="OLED 65 at address %addr"
+    //% blockId="newScreen" block="OLED 66 at address %addr"
     //% weight=100
     //% blockSetVariable=screen
     //% parts="firescreen"
@@ -574,7 +574,7 @@ namespace firescreen
         screen.cmd1(0xA6);          // NORMALDISPLAY
         screen.cmd2(0xD6, 0);       // NOZOOM
         screen.cmd1(0xAF) ;         // DISPLAYON
-        screen.clearScreen();
+        screen.clearScreen(0);
         return screen;
     }
 
