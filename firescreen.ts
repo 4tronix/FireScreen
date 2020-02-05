@@ -1,9 +1,5 @@
 ﻿/* Makecode Helper Functions for 4tronix OLED Addons */
 
-/**
- * Custom blocks
- */
-//% weight=50 color=#e7660b icon="\uf1da"
 namespace firescreen
 {
     /* create the character generator */
@@ -277,10 +273,6 @@ namespace firescreen
         _cBuf4: Buffer;
 
         /* Clears the OLED */
-        //% blockId="setScreen" block="%screen|All OLED pixels%set" 
-        //% weight=90
-        //% set.shadow="toggleOnOff"
-        //% parts="firescreen"
         setScreen(set: boolean)
         {
             this._oBuffer.fill(set ? 0xff : 0);
@@ -289,9 +281,6 @@ namespace firescreen
         }
 
         /* Update the OLED from the buffer */
-        //% blockId="updateScreen" block="%screen|update OLED" 
-        //% weight=80
-        //% parts="firescreen"
         updateScreen()
         {
             this.set_pos(0, 0);
@@ -335,35 +324,13 @@ namespace firescreen
             this.cmd1(0x10 | (c >> 4));  // upper start column address    
         }
 
-       /**
-         * show number on OLED
-         * @param n number to print: eg: 100
-         * @param x x value: eg: 0
-         * @param y y value: eg: 0
-         * @param inv inverse video: eg: false
-         */
-        //% blockId="doNumber" block="%screen|number %n| at x %x|y %y|inverse %inv"
-        //% weight=60
-        //% parts="firescreen"
-        //% inlineInputMode=inline
-        //% inv.shadow="toggleYesNo"
+        /* show number on OLED */
         doNumber(n: number, x: number, y: number, inv: boolean)
         {
             this.doText(n.toString(), x, y, inv);
         }
 
-       /**
-         * show text on OLED
-         * @param s string to print: eg: 'ABCDE'
-         * @param x x value: eg: 0
-         * @param y y value: eg: 0
-         * @param inv inverse video: eg: false
-         */
-        //% blockId="doText"
-        //% block="%screen|text%s|at x%x|y%y|inverse%inv"
-        //% weight=65
-        //% inlineInputMode=inline
-        //% inv.shadow="toggleYesNo"
+       /* show text on OLED */
         doText(s: string, x: number, y:number, inv: boolean)
         {
             for (let n = 0; n < s.length; n++)
@@ -415,7 +382,7 @@ namespace firescreen
             }
         }
 
-        // clear bit
+        /* clear selected bit in given byte */
         clearBit(d: number, b: number): number
         {
             if (d & (1 << b))
@@ -423,17 +390,7 @@ namespace firescreen
             return d;
         }
 
-       /**
-         * set pixel in OLED
-         * @param x x value: eg: 0
-         * @param y y value: eg: 0
-         * @param doSet on or off. eg: true
-         */
-        //% blockId="plotPixel"
-        //% block="%screen|set Oled pixel at x%x|y%y|set%doSet|update%update"
-        //% doSet.shadow="toggleOnOff"
-        //% parts="firescreen"
-        //% inlineInputMode=inline
+        /* set pixel in OLED */
         plotPixel(x: number, y: number, doSet: boolean, update: boolean)
         {
             let page = y >> 3;
@@ -462,28 +419,14 @@ namespace firescreen
             }
         }
 
-        /**
-          * Invert display
-          * @param inv inverse video: eg: false
-          */
-        //% blockId="invertOled" block="%screen|inverse video%inv"
-        //% weight=65
-        //% inv.shadow="toggleYesNo"
-        //% parts="firescreen"
+        /* Invert display */
         invertOled(inv: boolean)
         {
             let com = inv ? 0xA7 : 0xA6;
             this.cmd1(com);
         }
 
-        /**
-        * zoom display
-        * @param zoom zoomed text: eg: true
-        */
-        //% blockId="zoomOled" block="%screen|zoom%zoom"
-        //% weight=60
-        //% parts="firescreen"
-        //% zoom.shadow="toggleYesNo"
+        /* zoom display */
         zoomOled(zoom: boolean)
         {
             let com = zoom ? 1 : 0;
@@ -491,49 +434,21 @@ namespace firescreen
             this._zoom = zoom;
         }
 
-       /**
-         * draw a horizontal line
-         * @param x x start
-         * @param y y start
-         * @param len length of line, eg: 10
-         * @param doSet set or clear. eg: true
-         */
-        //% blockId="oledHLine" block="%screen|horizontal line at x%x|y%y|length%length|set%doSet|update%update"
-        //% parts="firescreen"
-        //% inlineInputMode=inline
+        /* draw a horizontal line */
         oledHLine(x: number, y: number, length: number, doSet: boolean, update: boolean)
         {
             for (let i = x; i < (x + length); i++)
                 this.plotPixel(i, y, doSet, update);
         }
 
-       /**
-         * draw a vertical line
-         * @param x x start
-         * @param y y start
-         * @param len length of line, eg: 10
-         * @param doSet set or clear. eg: true
-         */
-        //% blockId="oledVLine" block="%screen|vertical line at x%x|y%y|length%length|set%doSet|update%update"
-        //% parts="firescreen"
-        //% inlineInputMode=inline
+        /* draw a vertical line */
         oledVLine(x: number, y: number, length: number, doSet: boolean, update: boolean)
         {
             for (let i = y; i < (y + length); i++)
                 this.plotPixel(x, i, doSet, update);
         }
 
-       /**
-         * draw a rectangle
-         * @param x1 x start
-         * @param y1 y start
-         * @param x2 x finish
-         * @param y2 y finish
-         * @param doSet set or clear. eg: true
-         */
-        //% blockId="oledRect" block="%screen|rectangle at x1%x1|y1%y1|x2%x2|y2%y2|set%doSet|update%update"
-        //% parts="firescreen"
-        //% inlineInputMode=inline
+        /* draw a rectangle */
         oledRect(x1: number, y1: number, x2: number, y2: number, doSet: boolean, update: boolean)
         {
             if (x1 > x2)
@@ -548,15 +463,7 @@ namespace firescreen
 
     }
 
-    /**
-     * Create a new OLED
-     * @param addr is i2c address; eg: 60
-     */
-    //% blockId="newScreen" block="OLED 72 at address %addr"
-    //% weight=100
-    //% blockSetVariable=screen
-    //% parts="firescreen"
-    //% blockGap=20
+    /* Create a new OLED */
     export function newScreen(addr: number): Screen
     {
         let screen = new Screen();
@@ -589,6 +496,4 @@ namespace firescreen
         screen.setScreen(false);
         return screen;
     }
-
-
 }
