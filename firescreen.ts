@@ -398,7 +398,7 @@ namespace firescreen
         {
             x = Math.round(x);
             y = Math.round(y);
-            if ((x >= 0) && (x < this._width) && (y >= 0) && (y < this._height))
+            if ((x < 0) || (x >= this._width) || (y < 0) || (y >= this._height))
                 return;
             let page = y >> 3;
             let scPage = y % 8;
