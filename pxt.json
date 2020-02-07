@@ -1,6 +1,6 @@
 {
     "name": "FireScreen",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "4tronix OLED Helper Functions",
     "license": "MIT",
     "dependencies": {
