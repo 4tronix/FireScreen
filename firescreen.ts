@@ -442,7 +442,7 @@ namespace firescreen
             this._zoom = zoom;
         }
 
-        /* Draw a line from x1,y1 to x2,y2
+        /* draw a line from x1,y1 to x2,y2 */
         oledLine(x1: number, y1: number, x2: number, y2: number, doSet: boolean, update: boolean)
         {
             let xSteps = Math.abs(x2-x1);
