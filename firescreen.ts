@@ -265,6 +265,8 @@ namespace firescreen
     export class Screen
     {
         _address: number;
+        _width: number;
+        _height: number;
         _is128: boolean;
         _zoom: boolean;
         _oBuffer: Buffer;
@@ -391,30 +393,36 @@ namespace firescreen
         }
 
         /* set pixel in OLED */
+        /* round x, y to integers then ignore anything outside range */
         plotPixel(x: number, y: number, doSet: boolean, update: boolean)
         {
-            let page = y >> 3;
-            let scPage = y % 8;
-            let scaler = this._zoom ? 2 : 1;
-            let scPos = x * scaler + page * 128 + 1;
-            let byteVal = doSet ? (this._oBuffer[scPos] | (1 << scPage)) : this.clearBit(this._oBuffer[scPos], scPage);
-            this._oBuffer[scPos] = byteVal;
-            if (this._zoom)
-                this._oBuffer[scPos + 1] = byteVal;
-            if (update)
+            x = Math.round(x);
+            y = Math.round(y);
+            if ((x >= 0) && (x < this._width) && (y >= 0) && (y < this._height))
             {
-                this.set_pos(x, page);
+                let page = y >> 3;
+                let scPage = y % 8;
+                let scaler = this._zoom ? 2 : 1;
+                let scPos = x * scaler + page * 128 + 1;
+                let byteVal = doSet ? (this._oBuffer[scPos] | (1 << scPage)) : this.clearBit(this._oBuffer[scPos], scPage);
+                this._oBuffer[scPos] = byteVal;
                 if (this._zoom)
+                    this._oBuffer[scPos + 1] = byteVal;
+                if (update)
                 {
-                    this._cBuf3[0] = 0x40;
-                    this._cBuf3[1] = this._cBuf3[2] = byteVal;
-                    pins.i2cWriteBuffer(this._address, this._cBuf3);
-                }
-                else
-                {
-                    this._cBuf2[0] = 0x40;
-                    this._cBuf2[1] = byteVal;
-                    pins.i2cWriteBuffer(this._address, this._cBuf2);
+                    this.set_pos(x, page);
+                    if (this._zoom)
+                    {
+                        this._cBuf3[0] = 0x40;
+                        this._cBuf3[1] = this._cBuf3[2] = byteVal;
+                        pins.i2cWriteBuffer(this._address, this._cBuf3);
+                    }
+                    else
+                    {
+                        this._cBuf2[0] = 0x40;
+                        this._cBuf2[1] = byteVal;
+                        pins.i2cWriteBuffer(this._address, this._cBuf2);
+                    }
                 }
             }
         }
@@ -434,33 +442,72 @@ namespace firescreen
             this._zoom = zoom;
         }
 
-        /* draw a horizontal line */
-        oledHLine(x: number, y: number, length: number, doSet: boolean, update: boolean)
+        /* Draw a line from x1,y1 to x2,y2
+        oledLine(x1: number, y1: number, x2: number, y2: number, doSet: boolean, update: boolean)
         {
-            for (let i = x; i < (x + length); i++)
-                this.plotPixel(i, y, doSet, update);
-        }
-
-        /* draw a vertical line */
-        oledVLine(x: number, y: number, length: number, doSet: boolean, update: boolean)
-        {
-            for (let i = y; i < (y + length); i++)
-                this.plotPixel(x, i, doSet, update);
+            let xSteps = Math.abs(x2-x1);
+            let ySteps = Math.abs(y2-y1);
+            let x = x1;
+            let y = y1;
+            if (xSteps > ySteps)    // x is greater, so step in x
+            {
+                let dx = (x2 > x1) ? 1 : -1;
+                let dy = (y2 - y1) / xSteps;
+                for (let i=0; i < xSteps; i++)
+                {
+                    this.plotPixel(x, y, doSet, false);
+                    x += dx;
+                    y += dy;
+                }
+            }
+            else
+            {
+                let dx = (x2 - x1) / ySteps;
+                let dy = (y2 > y1) ? 1 : -1;
+                for (let i=0; i < ySteps; i++)
+                {
+                    this.plotPixel(x, y, doSet, false);
+                    x += dx;
+                    y += dy;
+                }
+            }
+            if (update)
+                this.updateScreen();
         }
 
         /* draw a rectangle */
         oledRect(x1: number, y1: number, x2: number, y2: number, doSet: boolean, update: boolean)
         {
-            if (x1 > x2)
-                x1 = [x2, x2 = x1][0];
-            if (y1 > y2)
-                y1 = [y2, y2 = y1][0];
-            this.oledHLine(x1, y1, x2 - x1 + 1, doSet, update);
-            this.oledHLine(x1, y2, x2 - x1 + 1, doSet, update);
-            this.oledVLine(x1, y1, y2 - y1 + 1, doSet, update);
-            this.oledVLine(x2, y1, y2 - y1 + 1, doSet, update);
+            this.oledLine(x1, y1, x2, y1, doSet, false);
+            this.oledLine(x1, y2, x2, y2, doSet, false);
+            this.oledLine(x1, y1, x1, y2, doSet, false);
+            this.oledLine(x2, y1, x2, y2, doSet, false);
+            if (update)
+                this.updateScreen();
         }
 
+        /* Draw a circle */
+        oledCircle (x0: number, y0: number, r: number, doSet: boolean, update: boolean)
+        {
+            let d3 = r / Math.sqrt(2);  // symmetrical around 45 degrees
+            let x = 0;
+            let y = 0;
+            while (x < d3)
+            {
+                y = Math.sqrt(r * r - x * x);
+                this.plotPixel(x0 + x, y0 + y, doSet, false);
+                this.plotPixel(x0 - x, y0 + y, doSet, false);
+                this.plotPixel(x0 + x, y0 - y, doSet, false);
+                this.plotPixel(x0 - x, y0 - y, doSet, false);
+                this.plotPixel(x0 + y, y0 + x, doSet, false);
+                this.plotPixel(x0 - y, y0 + x, doSet, false);
+                this.plotPixel(x0 + y, y0 - x, doSet, false);
+                this.plotPixel(x0 - y, y0 - x, doSet, false);
+                x += 1;
+            }
+            if (update)
+                this.updateScreen();
+        }
     }
 
     /* Create a new OLED */
@@ -472,6 +519,8 @@ namespace firescreen
         screen._cBuf3 = pins.createBuffer(3);
         screen._cBuf4 = pins.createBuffer(4);
         screen._address = addr;
+        screen._width = 128;
+        screen._height = 64;
         screen._is128 = true;
         screen._zoom = false;
         screen.cmd1(0xAE);          // DISPLAYOFF
