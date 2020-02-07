@@ -399,30 +399,29 @@ namespace firescreen
             x = Math.round(x);
             y = Math.round(y);
             if ((x >= 0) && (x < this._width) && (y >= 0) && (y < this._height))
+                return;
+            let page = y >> 3;
+            let scPage = y % 8;
+            let scaler = this._zoom ? 2 : 1;
+            let scPos = x * scaler + page * 128 + 1;
+            let byteVal = doSet ? (this._oBuffer[scPos] | (1 << scPage)) : this.clearBit(this._oBuffer[scPos], scPage);
+            this._oBuffer[scPos] = byteVal;
+            if (this._zoom)
+                this._oBuffer[scPos + 1] = byteVal;
+            if (update)
             {
-                let page = y >> 3;
-                let scPage = y % 8;
-                let scaler = this._zoom ? 2 : 1;
-                let scPos = x * scaler + page * 128 + 1;
-                let byteVal = doSet ? (this._oBuffer[scPos] | (1 << scPage)) : this.clearBit(this._oBuffer[scPos], scPage);
-                this._oBuffer[scPos] = byteVal;
+                this.set_pos(x, page);
                 if (this._zoom)
-                    this._oBuffer[scPos + 1] = byteVal;
-                if (update)
                 {
-                    this.set_pos(x, page);
-                    if (this._zoom)
-                    {
-                        this._cBuf3[0] = 0x40;
-                        this._cBuf3[1] = this._cBuf3[2] = byteVal;
-                        pins.i2cWriteBuffer(this._address, this._cBuf3);
-                    }
-                    else
-                    {
-                        this._cBuf2[0] = 0x40;
-                        this._cBuf2[1] = byteVal;
-                        pins.i2cWriteBuffer(this._address, this._cBuf2);
-                    }
+                    this._cBuf3[0] = 0x40;
+                    this._cBuf3[1] = this._cBuf3[2] = byteVal;
+                    pins.i2cWriteBuffer(this._address, this._cBuf3);
+                }
+                else
+                {
+                    this._cBuf2[0] = 0x40;
+                    this._cBuf2[1] = byteVal;
+                    pins.i2cWriteBuffer(this._address, this._cBuf2);
                 }
             }
         }
@@ -447,6 +446,8 @@ namespace firescreen
         {
             let xSteps = Math.abs(x2-x1);
             let ySteps = Math.abs(y2-y1);
+            if((xSteps == 0) && (ySteps == 0))
+                return;
             let x = x1;
             let y = y1;
             if (xSteps > ySteps)    // x is greater, so step in x
@@ -489,7 +490,7 @@ namespace firescreen
         /* Draw a circle */
         oledCircle (x0: number, y0: number, r: number, doSet: boolean, update: boolean)
         {
-            let d3 = r / Math.sqrt(2);  // symmetrical around 45 degrees
+            let d3 = r / Math.SQRT2;  // symmetrical around 45 degrees
             let x = 0;
             let y = 0;
             while (x < d3)
